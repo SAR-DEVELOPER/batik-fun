@@ -369,6 +369,7 @@ const SlideSidiq: React.FC = () => (
             "repeating-linear-gradient(45deg, rgba(212,175,55,0.08) 0 3px, transparent 3px 6px)",
         }}
       />
+      <div></div>
       {/* Main image */}
       <div
         className="absolute inset-0 cursor-pointer transition-all duration-700 hover:scale-105"
@@ -1664,6 +1665,18 @@ export default function BatikPOCPage() {
             >
               ▶
             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Design Credit */}
+      <div className="pointer-events-none absolute bottom-6 right-6 z-30">
+        <div className="rounded-lg bg-black/20 backdrop-blur-sm border border-white/10 px-3 py-2">
+          <div className="text-xs text-white/70 font-medium tracking-wide">
+            Design by{" "}
+            <span className="text-white/90 font-semibold">
+              Wilson Nathanael
+            </span>
           </div>
         </div>
       </div>
