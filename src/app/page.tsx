@@ -947,6 +947,17 @@ const slides: SlideDef[] = [
         rotate: "0",
       },
       {
+        src: "/assets/hero/sar.svg",
+        opacity: 1,
+        width: "15vw",
+        height: "15vw",
+        left: "50%",
+        top: "80%",
+        transform: "translate(-50%, -50%)", // Position from bottom instead of top
+        depth: "0.15",
+        rotate: "0",
+      },
+      {
         src: "/assets/hero/edge1.svg",
         opacity: 1,
         width: "100vw",
