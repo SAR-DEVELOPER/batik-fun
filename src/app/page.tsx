@@ -1299,6 +1299,7 @@ const slides: SlideDef[] = [
 
 export default function BatikPOCPage() {
   const [index, setIndex] = useState(0);
+  const indexRef = useRef(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
   const textRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -1311,6 +1312,10 @@ export default function BatikPOCPage() {
     animateSlideChange(index, next, dir);
     setIndex(next);
   };
+
+  useEffect(() => {
+    indexRef.current = index;
+  }, [index]);
 
   // Enter animations for first render
   useEffect(() => {
@@ -1555,6 +1560,46 @@ export default function BatikPOCPage() {
     return () => window.removeEventListener("keydown", onKey);
   }, [index]);
 
+  // Autoplay: advance slides on interval, pause on hover and when tab hidden
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const AUTO_PLAY_DELAY_MS = 10000;
+    let intervalId: number | undefined;
+
+    const start = () => {
+      if (intervalId) window.clearInterval(intervalId);
+      intervalId = window.setInterval(() => {
+        const from = indexRef.current;
+        const to = (from + 1) % slides.length;
+        animateSlideChange(from, to, 1);
+        setIndex(to);
+      }, AUTO_PLAY_DELAY_MS);
+    };
+
+    const stop = () => {
+      if (intervalId) {
+        window.clearInterval(intervalId);
+        intervalId = undefined;
+      }
+    };
+
+    const handleVisibility = () => {
+      if (document.hidden) stop();
+      else start();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    start();
+
+    return () => {
+      stop();
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, []);
+
   const currentSlide = slides[index];
 
   return (
@@ -1620,9 +1665,8 @@ export default function BatikPOCPage() {
             ref={(el) => {
               slideRefs.current[i] = el;
             }}
-            className={`absolute inset-x-0 mx-auto transition-opacity ${
-              i === index ? "slide-enter" : "pointer-events-none"
-            }`}
+            className={`absolute inset-x-0 mx-auto transition-opacity ${i === index ? "slide-enter" : "pointer-events-none"
+              }`}
             style={{
               opacity: i === index ? 1 : 0,
             }}
@@ -1652,9 +1696,8 @@ export default function BatikPOCPage() {
                       setIndex(i);
                     }
                   }}
-                  className={`h-2 w-2 cursor-pointer rounded-full ${
-                    index === i ? "bg-white" : "bg-white/40"
-                  }`}
+                  className={`h-2 w-2 cursor-pointer rounded-full ${index === i ? "bg-white" : "bg-white/40"
+                    }`}
                 />
               ))}
             </div>
